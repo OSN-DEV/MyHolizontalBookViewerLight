@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyHolizontalBookViewerLight"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="450" Width="800" Closing="Window_Closing" KeyDown="Window_KeyDown" AllowDrop="True">
+    <DockPanel>
+        <WebBrowser Name="cViewer" AllowDrop="True" />
+    </DockPanel>
 </Window>
