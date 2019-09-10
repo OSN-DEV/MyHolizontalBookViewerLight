@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyHolizontalBookViewerLight.Data;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MyHolizontalBookViewerLight.Data;
 
 namespace MyHolizontalBookViewerLight {
     /// <summary>
@@ -83,7 +73,7 @@ namespace MyHolizontalBookViewerLight {
                         this.ShowPage();
                     } else if (this.IsModifierPressed(ModifierKeys.Control)) {
                         e.Handled = true;
-                        this.ShowPage();
+                        this.cViewer.Refresh();
                     }
                     break;
 
