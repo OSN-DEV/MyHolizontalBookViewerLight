@@ -121,6 +121,18 @@ namespace MyHolizontalBookViewerLight.Data {
         }
 
         /// <summary>
+        /// 指定したページへ移動
+        /// </summary>
+        /// <returns>true:移動成功、false:それ以外</returns>
+        internal bool MoveTo(int index) {
+            if (0 <= index && index < this._pages.Count) {
+                this.Index = index;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        /// <summary>
         /// 次ページへ移動
         /// </summary>
         /// <returns>true:移動成功、false:それ以外</returns>

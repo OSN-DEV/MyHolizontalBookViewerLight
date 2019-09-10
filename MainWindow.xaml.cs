@@ -77,7 +77,9 @@ namespace MyHolizontalBookViewerLight {
                 case Key.R:
                     if (this.IsModifierPressed(ModifierKeys.Control) && this.IsModifierPressed(ModifierKeys.Shift)) {
                         e.Handled = true;
+                        var index = this._operator.Index;
                         this._operator.ParseMeta();
+                        this._operator.MoveTo(index);
                         this.ShowPage();
                     } else if (this.IsModifierPressed(ModifierKeys.Control)) {
                         e.Handled = true;
