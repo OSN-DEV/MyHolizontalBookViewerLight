@@ -20,10 +20,20 @@ namespace MyHolizontalBookViewerLight {
     public  partial class TocWindow : Window {
 
         #region Constructor
-        internal TocWindow(Window owner, List<MetaOperator.TocModelEx> model) {
+        internal TocWindow(Window owner, List<MetaOperator.TocModelEx> model, int index) {
             InitializeComponent();
             this.Owner = owner;
             this.cToc.DataContext = model;
+
+            this.Loaded += (sender, e) => {
+                for (int i = 0; i < model.Count; i++) {
+                    if (model[i].Index == index) {
+                        this.cToc.SelectedIndex = i;
+                        this.cToc.ScrollIntoView(this.cToc.SelectedItem);
+                        break;
+                    }
+                }
+            };
         }
         #endregion
 

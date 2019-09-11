@@ -99,7 +99,7 @@ namespace MyHolizontalBookViewerLight {
 
                 case Key.O:
                     e.Handled = true;
-                    var dialog = new TocWindow(this, this._operator.Toc);
+                    var dialog = new TocWindow(this, this._operator.Toc, this._operator.Index);
                     if (true == dialog.ShowDialog()) {
                         this._operator.Index = dialog.Index;
                         this.ShowPage();
