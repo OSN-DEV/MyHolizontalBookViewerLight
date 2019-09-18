@@ -99,8 +99,8 @@ namespace MyHolizontalBookViewerLight.Data {
                         toc.Link = this.ConvertWinPath(toc.Link);
                         if (!this._pages.Contains(toc.Link)) {
                             this._pages.Add(toc.Link);
-                            toc.Index = this._pages.Count - 1;
                         }
+                        toc.Index = this._pages.Count - 1;
                     }
                     if (0 < toc.Level && 0 < toc.Content?.Length) {
                         var padding = "";
