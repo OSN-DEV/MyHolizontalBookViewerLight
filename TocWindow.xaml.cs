@@ -34,6 +34,13 @@ namespace MyHolizontalBookViewerLight {
                     }
                 }
             };
+
+            this.KeyDown += (sender, e) => {
+                if (e.Key == Key.Escape) {
+                    e.Handled = true;
+                    this.Close();
+                }
+            };
         }
         #endregion
 

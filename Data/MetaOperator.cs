@@ -109,7 +109,7 @@ namespace MyHolizontalBookViewerLight.Data {
                         } else if (3 == toc.Level) {
                             padding = "　　";
                         }
-                        toc.Content = padding + toc.Content;
+                        toc.Content =(toc.Index + 1).ToString("000 ") + padding + toc.Content;
                         this.Toc.Add(toc);
                     }
                 }
