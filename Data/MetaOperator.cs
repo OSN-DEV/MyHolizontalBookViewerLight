@@ -27,6 +27,7 @@ namespace MyHolizontalBookViewerLight.Data {
         }
 
         private string _rootDir = "";
+        private string _contentDir = "";
         private readonly List<string> _pages = new List<string>();
         #endregion
 
@@ -65,11 +66,12 @@ namespace MyHolizontalBookViewerLight.Data {
         /// </summary>
         internal string CurrentPage {
             get {
-                return this._rootDir + this._pages[this.Index];
+                return this._contentDir + this._pages[this.Index];
             }
         }
 
-        /// <summary>
+        /// <summary
+        /// 
         /// 目次
         /// </summary>
         internal List<TocModelEx> Toc { private set; get; } = new List<TocModelEx>();
@@ -84,23 +86,30 @@ namespace MyHolizontalBookViewerLight.Data {
             bool result = false;
             this.Index = 0;
             this._rootDir = "";
+            this._contentDir = "";
             this._pages.Clear();
             this.Toc.Clear();
             try {
                 var model = JsonConvert.DeserializeObject<MetaModel>(File.ReadAllText(this.MetaFile));
                 this._rootDir = new FileOperator(this.MetaFile).FileDir + @"\";
+                this._contentDir = this._rootDir + this.ConvertWinPath(model.ContentDir) + @"\";
                 this.Title = model.Title;
-                if (0 < model.Cover?.Length) {
-                    this._pages.Add(this.ConvertWinPath(model.Cover));
+                //if (0 < model.Cover?.Length) {
+                //    this._pages.Add(this.ConvertWinPath(model.Cover));
+                //}
+                var contentDir = new DirectoryOperator(this._contentDir);
+                contentDir.ParseChildren(false);
+                foreach (var content in contentDir.Children) {
+                    this._pages.Add(content.Name);
                 }
+
                 foreach (var content in model.TableOfContents) {
                     var toc = new TocModelEx(content);
                     if (0 < toc.Link?.Length) {
-                        toc.Link = this.ConvertWinPath(toc.Link);
-                        if (!this._pages.Contains(toc.Link)) {
-                            this._pages.Add(toc.Link);
+                        if (this._pages.Contains(toc.Link)) {
+                            toc.Index = this._pages.IndexOf(toc.Link);
                         }
-                        toc.Index = this._pages.Count - 1;
+                        toc.Link = this.ConvertWinPath(toc.Link);
                     }
                     if (0 < toc.Level && 0 < toc.Content?.Length) {
                         var padding = "";
@@ -114,7 +123,8 @@ namespace MyHolizontalBookViewerLight.Data {
                     }
                 }
                 result = true;
-            } catch {
+            } catch (Exception ex){
+                Console.WriteLine(ex.Message);
             }
 
             return result;

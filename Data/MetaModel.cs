@@ -103,6 +103,11 @@ namespace MyHolizontalBookViewerLight.Data {
         public string Characters { set; get; }
 
         /// <summary>
+        /// コンテンツの格納フォルダ
+        /// </summary>
+        public string ContentDir { set; get; }
+
+        /// <summary>
         /// 目次
         /// </summary>
         public IList<TocModel> TableOfContents { set; get; }

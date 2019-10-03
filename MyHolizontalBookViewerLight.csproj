@@ -43,7 +43,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\MyLib.dll</HintPath>
     </Reference>
-    <Reference Include="MyLib.File">
+    <Reference Include="MyLib.File, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c0b398a93265599, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\MyLib.File.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

@@ -129,7 +129,11 @@ namespace MyHolizontalBookViewerLight {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Viewer_Navigating(object sender, NavigatingCancelEventArgs e) {
-            if (!e.Uri.IsFile || !e.Uri.AbsolutePath.EndsWith(@"/meta.json")) {
+            if (!e.Uri.IsFile) {
+                e.Cancel = true;
+                return;
+            }
+            if (!e.Uri.AbsolutePath.EndsWith(@"/meta.json")) {
                 return;
             }
 
@@ -151,10 +155,10 @@ namespace MyHolizontalBookViewerLight {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Viewer_LoadCompleted(object sender, NavigationEventArgs e) {
+            this._loading = false;
             if (null == e.Uri) {
                 return;
             }
-            this._loading = false;
 
             //            var doc = (MSHTML.HTMLDocument)this.cViewer.Document;
             //this.Document.GetElementsByTagName("HTML")[0].ScrollTop = this._scrollTop;
@@ -180,9 +184,13 @@ namespace MyHolizontalBookViewerLight {
         /// 現在のページを表示
         /// </summary>
         private void ShowPage() {
-            this._loading = true;
             this.Title = this._operator.TitleWithPage;
-            this.cViewer.Navigate(new Uri(this._operator.CurrentPage));
+            if (System.IO.File.Exists(this._operator.CurrentPage)) {
+                this._loading = true;
+                this.cViewer.Navigate(new Uri(this._operator.CurrentPage));
+            } else {
+
+            }
         }
 
 
