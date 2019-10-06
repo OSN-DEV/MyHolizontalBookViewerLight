@@ -46,6 +46,11 @@ namespace MyHolizontalBookViewerLight.Data {
             public string Content { set; get; }
 
             /// <summary>
+            /// ファイルインデックス
+            /// </summary>
+            public string FileIndex { set; get; }
+
+            /// <summary>
             /// ページのリンク
             /// </summary>
             public string Link { set; get; }

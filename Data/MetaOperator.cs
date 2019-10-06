@@ -112,13 +112,14 @@ namespace MyHolizontalBookViewerLight.Data {
                         toc.Link = this.ConvertWinPath(toc.Link);
                     }
                     if (0 < toc.Level && 0 < toc.Content?.Length) {
-                        var padding = "";
+                        var padding = "　";
                         if (2 == toc.Level) {
-                            padding = "　";
-                        } else if (3 == toc.Level) {
                             padding = "　　";
+                        } else if (3 == toc.Level) {
+                            padding = "　　　　";
                         }
-                        toc.Content =(toc.Index + 1).ToString("000 ") + padding + toc.Content;
+                        toc.Content = padding + toc.Content;
+                        toc.FileIndex = string.Format("[{0:000}]  ", toc.Index + 1);
                         this.Toc.Add(toc);
                     }
                 }

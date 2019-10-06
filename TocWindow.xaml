@@ -10,9 +10,15 @@
         <ListView Name="cToc" Height="Auto" ItemsSource="{Binding}" SelectionMode="Single" MouseDoubleClick="TocList_MouseDoubleClick">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Content}" VerticalAlignment="Center" Padding="5" FontSize="14"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Content}" VerticalAlignment="Center" Padding="5" FontSize="14"/>
+                        <TextBlock Grid.Column="2" Text="{Binding FileIndex}" VerticalAlignment="Center" Padding="5" FontSize="14"/>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle >
@@ -29,7 +35,7 @@
                     </Setter>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True" >
-                            <Setter Property="Background" Value="#FFE6E0E0" />
+                            <Setter Property="Background" Value="#FF58BBFF" />
                             <Setter Property="BorderBrush" Value="#FFE6E0E0" />
                             <Setter Property="Foreground" Value="#FFFFFF" />
                         </Trigger>
