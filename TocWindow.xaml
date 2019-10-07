@@ -12,12 +12,11 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding Content}" VerticalAlignment="Center" Padding="5" FontSize="14"/>
-                        <TextBlock Grid.Column="2" Text="{Binding FileIndex}" VerticalAlignment="Center" Padding="5" FontSize="14"/>
+                        <TextBlock Grid.Column="1" Text="{Binding FileIndex}" VerticalAlignment="Center" Padding="5" FontSize="14"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
