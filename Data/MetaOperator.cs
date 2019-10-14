@@ -119,7 +119,9 @@ namespace MyHolizontalBookViewerLight.Data {
                             padding = "　　　　";
                         }
                         toc.Content = padding + toc.Content;
-                        toc.FileIndex = string.Format("[{0:000}]  ", toc.Index + 1);
+                        if (0 < toc.Link.Length) {
+                            toc.FileIndex = string.Format("[{0:000}]  ", toc.Index + 1);
+                        }
                         this.Toc.Add(toc);
                     }
                 }
