@@ -107,6 +107,12 @@ namespace MyHolizontalBookViewerLight {
                         this._appData.Save();
                     }
                     break;
+
+                case Key.P:
+                    e.Handled = true;
+                    var fileName = new MyLib.File.FileOperator(this._operator.CurrentPage);
+                    Clipboard.SetText(fileName.Name, TextDataFormat.Text);
+                    break;
             }
         }
 
