@@ -35,13 +35,14 @@ namespace MyHolizontalBookViewerLight {
                 this.Height = this._appData.WindowSizeH;
             }
             if (0 < this._appData.RecentFiles.Count) {
-                this._operator.MetaFile = this._appData.RecentFiles[0];
+                var recentFile = this._appData.RecentFiles[0];
+                this._operator.MetaFile = recentFile.FilePath;
                 if (!this._operator.ParseMeta()) {
                     this._appData.RecentFiles.RemoveAt(0);
                     this._appData.Save();
                 } else {
-                    if (-1 < this._appData.LastIndex) {
-                        this._operator.Index = this._appData.LastIndex;
+                    if (-1 < recentFile.LastIndex) {
+                        this._operator.Index = recentFile.LastIndex;
                     } else {
                         this._operator.Index = 0;
                     }
@@ -82,7 +83,7 @@ namespace MyHolizontalBookViewerLight {
                     e.Handled = true;
                     if (this._operator.MoveToNext()) {
                         this.ShowPage();
-                        this._appData.LastIndex = this._operator.Index;
+                        this._appData.RecentFiles[0].LastIndex = this._operator.Index;
                         this._appData.Save();
                     }
                     break;
@@ -92,7 +93,7 @@ namespace MyHolizontalBookViewerLight {
                     e.Handled = true;
                     if (this._operator.MoveToPrevious()) {
                         this.ShowPage();
-                        this._appData.LastIndex = this._operator.Index;
+                        this._appData.RecentFiles[0].LastIndex = this._operator.Index;
                         this._appData.Save();
                     }
                     break;
@@ -103,7 +104,7 @@ namespace MyHolizontalBookViewerLight {
                     if (true == dialog.ShowDialog()) {
                         this._operator.Index = dialog.Index;
                         this.ShowPage();
-                        this._appData.LastIndex = this._operator.Index;
+                        this._appData.RecentFiles[0].LastIndex = this._operator.Index;
                         this._appData.Save();
                     }
                     break;
@@ -206,11 +207,19 @@ namespace MyHolizontalBookViewerLight {
         /// </summary>
         /// <param name="file">追加するファイル</param>
         private void AddRecentfile(string file) {
+            var lastIndex = 0;
             var recentFiles = this._appData.RecentFiles;
-            if (recentFiles.Contains(file)) {
-                recentFiles.Remove(file);
+            foreach(var recentFile in recentFiles) {
+                if (recentFile.FilePath == file) {
+                    lastIndex = recentFile.LastIndex;
+                    recentFiles.Remove(recentFile);
+                    break;
+                }
             }
-            recentFiles.Insert(0, file);
+            recentFiles.Insert(0, new AppData.RecentFile() {
+                FilePath = file,
+                LastIndex = lastIndex
+            });
             this._appData.Save();
         }
 

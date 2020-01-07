@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Generic; 
 using MyLib.Data;
 using MyHolizontalBookViewerLight.Util;
 
@@ -33,15 +33,20 @@ namespace MyHolizontalBookViewerLight.Data {
         /// </summary>
         public double WindowPosY { set; get; } = -1;
 
+
+        public class RecentFile {
+            public string FilePath { set; get; } = "";
+            public int LastIndex { set; get; } = 0;
+        }
         /// <summary>
         /// 最近使ったファイルのリスト。
         /// </summary>
-        public List<string> RecentFiles { set; get; } = new List<string>();
+        public List<RecentFile> RecentFiles { set; get; } = new List<RecentFile>();
 
-        /// <summary>
-        /// 最後に読んでいたページ
-        /// </summary>
-        public int LastIndex { set; get; } = -1;
+        ///// <summary>
+        ///// 最後に読んでいたページ
+        ///// </summary>
+        //public int LastIndex { set; get; } = -1;
 
         /// <summary>
         /// 最後に読んでいたページのトップ位置
