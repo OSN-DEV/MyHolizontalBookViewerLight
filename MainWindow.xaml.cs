@@ -220,6 +220,7 @@ namespace MyHolizontalBookViewerLight {
                 FilePath = file,
                 LastIndex = lastIndex
             });
+            this._operator.Index = lastIndex;
             this._appData.Save();
         }
 
