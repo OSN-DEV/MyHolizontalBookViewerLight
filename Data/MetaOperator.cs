@@ -66,6 +66,9 @@ namespace MyHolizontalBookViewerLight.Data {
         /// </summary>
         internal string CurrentPage {
             get {
+                if (this._pages.Count <= this.Index) {
+                    this.Index = this._pages.Count - 1;
+                }
                 return this._contentDir + this._pages[this.Index];
             }
         }
