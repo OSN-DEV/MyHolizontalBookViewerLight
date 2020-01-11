@@ -26,11 +26,22 @@ namespace MyHolizontalBookViewerLight {
             this.cToc.DataContext = model;
 
             this.Loaded += (sender, e) => {
+                bool scrolled = false;
                 for (int i = 0; i < model.Count; i++) {
                     if (model[i].Index == index) {
                         this.cToc.SelectedIndex = i;
                         this.cToc.ScrollIntoView(this.cToc.SelectedItem);
+                        scrolled = true;
                         break;
+                    }
+                }
+                if (!scrolled) {
+                    for (int i = model.Count-1; 0 <= i ; i--) {
+                        if (model[i].Index < index) {
+                            this.cToc.SelectedIndex = i;
+                            this.cToc.ScrollIntoView(this.cToc.SelectedItem);
+                            break;
+                        }
                     }
                 }
             };

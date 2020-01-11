@@ -175,7 +175,6 @@ namespace MyHolizontalBookViewerLight {
         #endregion
 
 
-
         //public void SaveScrollTop() {
         //    //            this._scrollTop = this.Document.Body.ScrollTop;
         //    try {
