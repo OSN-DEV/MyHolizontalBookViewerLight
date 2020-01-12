@@ -36,14 +36,14 @@ namespace MyHolizontalBookViewerLight {
                     }
                 }
                 if (!scrolled) {
-                    for (int i = model.Count-1; 0 <= i ; i--) {
+                    for(int i=model.Count -1; 0<= i; i--) {
                         if (model[i].Index < index) {
                             this.cToc.SelectedIndex = i;
                             this.cToc.ScrollIntoView(this.cToc.SelectedItem);
                             break;
                         }
                     }
-                }
+                                    }
             };
 
             this.KeyDown += (sender, e) => {
