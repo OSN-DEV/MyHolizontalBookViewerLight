@@ -69,8 +69,9 @@ namespace MyHolizontalBookViewerLight {
             using (ZipArchive archive = ZipFile.OpenRead(file)) {
                 Application.Current.Dispatcher.Invoke(() => {
                     this.cProgress.Value = 0;
-                    this.cProgress.Maximum = archive.Entries.Count;
+                    this.cProgress.Maximum = 100;
                 });
+                var index = 0;
                 foreach (ZipArchiveEntry entry in archive.Entries) {
                     if (entry.FullName.EndsWith("/")) {
                         new DirectoryOperator(dest + @"\" + entry.FullName).Create();
@@ -78,7 +79,7 @@ namespace MyHolizontalBookViewerLight {
                         entry.ExtractToFile(Path.Combine(dest, entry.FullName));
                     }
                     Application.Current.Dispatcher.Invoke(() => {
-                        this.cProgress.Value ++;
+                        this.cProgress.Value = (++index) / archive.Entries.Count;
                     });
                 }
             }
