@@ -37,6 +37,8 @@ namespace MyHolizontalBookViewerLight.Data {
         public class RecentFile {
             public string FilePath { set; get; } = "";
             public int LastIndex { set; get; } = 0;
+            public string HBVFilePath { set; get; } = "";
+            public string CacheDir { set; get; } = "";
         }
         /// <summary>
         /// 最近使ったファイルのリスト。
@@ -73,6 +75,7 @@ namespace MyHolizontalBookViewerLight.Data {
         internal void Save() {
             base.SaveToXml();
         }
+
         #endregion
     }
 }

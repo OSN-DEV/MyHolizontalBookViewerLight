@@ -43,7 +43,7 @@ namespace MyHolizontalBookViewerLight {
                             break;
                         }
                     }
-                                    }
+                }
             };
 
             this.KeyDown += (sender, e) => {

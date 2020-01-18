@@ -1,8 +1,13 @@
 ﻿using MyHolizontalBookViewerLight.Data;
+using MyHolizontalBookViewerLight.Util;
+using MyLib.File;
+using MyLib.Util;
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using static MyHolizontalBookViewerLight.Data.AppData;
 
 namespace MyHolizontalBookViewerLight {
     /// <summary>
@@ -19,36 +24,7 @@ namespace MyHolizontalBookViewerLight {
         #region Constructor
         public MainWindow() {
             InitializeComponent();
-            this.cViewer.Navigating += Viewer_Navigating;
-            this.cViewer.LoadCompleted += Viewer_LoadCompleted;
-
-            if (0 <= this._appData.WindowPosX && (this._appData.WindowPosX + this._appData.WindowSizeW) < SystemParameters.VirtualScreenWidth) {
-                this.Left = this._appData.WindowPosX;
-            }
-            if (0 <= this._appData.WindowPosY && (this._appData.WindowPosY + this._appData.WindowSizeH) < SystemParameters.VirtualScreenHeight) {
-                this.Top = this._appData.WindowPosY;
-            }
-            if (0 < this._appData.WindowSizeW && this._appData.WindowSizeW <= SystemParameters.WorkArea.Width) {
-                this.Width = this._appData.WindowSizeW;
-            }
-            if (0 < this._appData.WindowSizeH && this._appData.WindowSizeH <= SystemParameters.WorkArea.Height) {
-                this.Height = this._appData.WindowSizeH;
-            }
-            if (0 < this._appData.RecentFiles.Count) {
-                var recentFile = this._appData.RecentFiles[0];
-                this._operator.MetaFile = recentFile.FilePath;
-                if (!this._operator.ParseMeta()) {
-                    this._appData.RecentFiles.RemoveAt(0);
-                    this._appData.Save();
-                } else {
-                    if (-1 < recentFile.LastIndex) {
-                        this._operator.Index = recentFile.LastIndex;
-                    } else {
-                        this._operator.Index = 0;
-                    }
-                    this.ShowPage();
-                }
-            }
+            this.Initialize();
         }
         #endregion
 
@@ -66,13 +42,13 @@ namespace MyHolizontalBookViewerLight {
 
             switch (e.Key) {
                 case Key.R:
-                    if (this.IsModifierPressed(ModifierKeys.Control) && this.IsModifierPressed(ModifierKeys.Shift)) {
+                    if (Common.IsModifierPressed(ModifierKeys.Control) && Common.IsModifierPressed(ModifierKeys.Shift)) {
                         e.Handled = true;
                         var index = this._operator.Index;
                         this._operator.ParseMeta();
                         this._operator.MoveTo(index);
                         this.ShowPage();
-                    } else if (this.IsModifierPressed(ModifierKeys.Control)) {
+                    } else if (Common.IsModifierPressed(ModifierKeys.Control)) {
                         e.Handled = true;
                         this.cViewer.Refresh();
                     }
@@ -140,20 +116,30 @@ namespace MyHolizontalBookViewerLight {
                 e.Cancel = true;
                 return;
             }
-            if (!e.Uri.AbsolutePath.EndsWith(@"/meta.json")) {
+
+            var file = FileOperator.Create(e.Uri.LocalPath);
+            if (file.IsDirectory) {
+                e.Cancel = true;
                 return;
             }
 
-            e.Cancel = true;
-            this._operator.MetaFile = e.Uri.LocalPath + Uri.UnescapeDataString(e.Uri.Fragment);
-            if (!this._operator.ParseMeta()) {
-                MessageBox.Show("fail to parse metadata");
-                return;
+
+            if (file.Name.EndsWith(@"meta.json")) {
+                e.Cancel = true;
+                this.ShowBook(e.Uri.LocalPath + Uri.UnescapeDataString(e.Uri.Fragment));
+            } else  if (file.Extension == "hbv") {
+                e.Cancel = true;
+                var recentFile = this.ContainsExtractFiles(file.FilePath);
+                if (null != recentFile) {
+                    this.ShowBook(recentFile.CacheDir + @"\meta.json", recentFile.HBVFilePath, recentFile.CacheDir);
+                } else {
+                    var cacheDir = Constant.CacheDir + DateTime.Now.ToString("yyyyMMddHHMMss");
+                    var zip = new ZipOperator((FileOperator)file);
+                    zip.Extract(cacheDir);
+                    this.ShowBook(cacheDir + @"\meta.json", file.FilePath, cacheDir);
+                }
             }
-            this.AddRecentfile(this._operator.MetaFile);
-            this._appData.LastScrollTop = 0;
-            this._appData.Save();
-            this.ShowPage();
+
         }
 
         /// <summary>
@@ -166,26 +152,27 @@ namespace MyHolizontalBookViewerLight {
             if (null == e.Uri) {
                 return;
             }
-
-            //            var doc = (MSHTML.HTMLDocument)this.cViewer.Document;
-            //this.Document.GetElementsByTagName("HTML")[0].ScrollTop = this._scrollTop;
-            //this._scrollTop = -1;
         }
-
         #endregion
 
 
-        //public void SaveScrollTop() {
-        //    //            this._scrollTop = this.Document.Body.ScrollTop;
-        //    try {
-        //        this._scrollTop = this.Document.GetElementsByTagName("HTML")[0].ScrollTop;
-        //    } catch (Exception ex) {
-        //        Console.WriteLine(ex.Message);
-        //        this._scrollTop = -1;
-        //    }
-        //}
-
         #region Private Method
+        /// <summary>
+        /// show book
+        /// </summary>
+        /// <param name="metaFile"></param>
+        private void ShowBook(string metaFile, string hbvFile = "", string cacheDir = "") {
+            this._operator.MetaFile = metaFile;
+            if (!this._operator.ParseMeta()) {
+                MessageBox.Show("fail to parse metadata");
+                return;
+            }
+            this.AddRecentfile(this._operator.MetaFile, hbvFile, cacheDir);
+            this._appData.LastScrollTop = 0;
+            this._appData.Save();
+            this.ShowPage();
+        }
+
         /// <summary>
         /// 現在のページを表示
         /// </summary>
@@ -199,37 +186,120 @@ namespace MyHolizontalBookViewerLight {
             }
         }
 
-
-
         /// <summary>
         /// 最近使ったファイルを追加
         /// </summary>
         /// <param name="file">追加するファイル</param>
-        private void AddRecentfile(string file) {
-            var lastIndex = 0;
+        /// <param name="hbvFile">アーカイブ</param>
+        /// <param name="cacheDir">キャッシュフォルダ</param>
+        private void AddRecentfile(string file, string hbvFile = "", string cacheDir = "") {
             var recentFiles = this._appData.RecentFiles;
-            foreach(var recentFile in recentFiles) {
+            var lastIndex = 0;
+            foreach (var recentFile in recentFiles) {
                 if (recentFile.FilePath == file) {
                     lastIndex = recentFile.LastIndex;
                     recentFiles.Remove(recentFile);
+                    hbvFile = recentFile.HBVFilePath;
+                    cacheDir = recentFile.CacheDir;
                     break;
                 }
             }
             recentFiles.Insert(0, new AppData.RecentFile() {
                 FilePath = file,
-                LastIndex = lastIndex
+                LastIndex = lastIndex,
+                HBVFilePath = hbvFile,
+                CacheDir = cacheDir
             });
+            if (Constant.RecentFilesMaxCount < recentFiles.Count) {
+                recentFiles.RemoveRange(Constant.RecentFilesMaxCount, recentFiles.Count - Constant.RecentFilesMaxCount);
+            }
             this._operator.Index = lastIndex;
             this._appData.Save();
         }
 
         /// <summary>
-        /// check if modifiered key is pressed
+        /// initialize window
         /// </summary>
-        /// <param name="key">modifier key</param>
-        /// <returns>true:modifiered key is pressed, false:otherwise</returns>
-        private bool IsModifierPressed(ModifierKeys key) {
-            return (Keyboard.Modifiers & key) != ModifierKeys.None;
+        private void Initialize() {
+            // set event
+            this.cViewer.Navigating += Viewer_Navigating;
+            this.cViewer.LoadCompleted += Viewer_LoadCompleted;
+
+            // restore window
+            double x = Common.GetWindowPosition(this._appData.WindowPosX, this._appData.WindowSizeW, SystemParameters.VirtualScreenWidth);
+            double y = Common.GetWindowPosition(this._appData.WindowPosY, this._appData.WindowSizeH, SystemParameters.VirtualScreenHeight);
+            if (0 <= x) {
+                this.Left = x;
+            }
+            if (0 <= y) {
+                this.Top = y;
+            }
+            this.Width = Common.GetWindowSize(this.Width, this._appData.WindowSizeW, SystemParameters.WorkArea.Width);
+            this.Height = Common.GetWindowSize(this.Height, this._appData.WindowSizeH, SystemParameters.WorkArea.Height);
+
+            // Create CacheDir
+            new DirectoryOperator(Constant.CacheDir).Create();
+
+            // clean unused cached file
+            this.CleanUnUsedHbvCache();
+
+            // show last books
+            if (0 < this._appData.RecentFiles.Count) {
+                var recentFile = this._appData.RecentFiles[0];
+                if (System.IO.File.Exists(recentFile.FilePath)) {
+                    this._operator.MetaFile = recentFile.FilePath;
+                    if (!this._operator.ParseMeta()) {
+                        this._appData.RecentFiles.RemoveAt(0);
+                        this._appData.Save();
+                    } else {
+                        if (-1 < recentFile.LastIndex) {
+                            this._operator.Index = recentFile.LastIndex;
+                        } else {
+                            this._operator.Index = 0;
+                        }
+                        this.ShowPage();
+                    }
+                } else {
+                    this._appData.RecentFiles.RemoveAt(0);
+                    this._appData.Save();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 最近使ったファイルリストに指定したHBVが含まれるか判定
+        /// </summary>
+        /// <param name="hbv">対象となるHBVファイル</param>
+        /// <returns>true:含まれる、false:含まれない</returns>
+        internal RecentFile ContainsExtractFiles(string hbv) {
+            foreach(var file in this._appData.RecentFiles) {
+                if (file.HBVFilePath == hbv) {
+                    return file;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// delete unrelated hbv cached files
+        /// </summary>
+        private void CleanUnUsedHbvCache() {
+            var rootInfo = new DirectoryInfo(Constant.CacheDir);
+            var dirList = rootInfo.EnumerateDirectories();
+            foreach (DirectoryInfo dir in dirList) {
+                var target = new DirectoryOperator(dir.FullName);
+                var found = false;
+                foreach(var file  in this._appData.RecentFiles) {
+                    if (file.CacheDir == target.FilePath) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found ) {
+                    target.Delete();
+                }
+            }
         }
         #endregion
 
