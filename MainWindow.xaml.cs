@@ -4,6 +4,7 @@ using MyLib.File;
 using MyLib.Util;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
@@ -133,10 +134,13 @@ namespace MyHolizontalBookViewerLight {
                 if (null != recentFile) {
                     this.ShowBook(recentFile.CacheDir + @"\meta.json", recentFile.HBVFilePath, recentFile.CacheDir);
                 } else {
+                    var dialog = new ExtractWindow(this);
+                    dialog.HBVFile = file.FilePath;
+                    dialog.DestDir = Constant.CacheDir + DateTime.Now.ToString("yyyyMMddHHMMss");
                     var cacheDir = Constant.CacheDir + DateTime.Now.ToString("yyyyMMddHHMMss");
-                    var zip = new ZipOperator((FileOperator)file);
-                    zip.Extract(cacheDir);
-                    this.ShowBook(cacheDir + @"\meta.json", file.FilePath, cacheDir);
+                    if (true == dialog.ShowDialog()) {
+                        this.ShowBook(cacheDir + @"\meta.json", file.FilePath, cacheDir);
+                    }
                 }
             }
 
@@ -301,6 +305,8 @@ namespace MyHolizontalBookViewerLight {
                 }
             }
         }
+
+
         #endregion
 
     }
