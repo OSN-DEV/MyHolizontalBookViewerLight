@@ -37,6 +37,7 @@ namespace MyHolizontalBookViewerLight {
 
         #region Event
         private void ExtractWindow_Loaded(object sender, RoutedEventArgs e) {
+            this.cProgressText.Text = "";
             Task.Run(() => {
                 try {
                     Extract(this.HBVFile, this.DestDir);
@@ -79,7 +80,7 @@ namespace MyHolizontalBookViewerLight {
                         entry.ExtractToFile(Path.Combine(dest, entry.FullName));
                     }
                     Application.Current.Dispatcher.Invoke(() => {
-                        this.cProgress.Value = (++index) / archive.Entries.Count;
+                        this.cProgress.Value = ((++index) * 100) / archive.Entries.Count;
                     });
                 }
             }
