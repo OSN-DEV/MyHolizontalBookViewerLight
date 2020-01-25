@@ -89,7 +89,11 @@ namespace MyHolizontalBookViewerLight {
                 case Key.P:
                     e.Handled = true;
                     var fileName = new MyLib.File.FileOperator(this._operator.CurrentPage);
-                    Clipboard.SetText(fileName.Name, TextDataFormat.Text);
+                    if (Common.IsModifierPressed(ModifierKeys.Shift)) {
+                        MessageBox.Show(fileName.Name);
+                    } else {
+                        Clipboard.SetText(fileName.Name, TextDataFormat.Text);
+                    }
                     break;
             }
         }
