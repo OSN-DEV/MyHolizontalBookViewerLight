@@ -77,9 +77,9 @@ namespace MyHolizontalBookViewerLight {
 
                 case Key.O:
                     e.Handled = true;
-                    var dialog = new TocWindow(this, this._operator.Toc, this._operator.Index);
-                    if (true == dialog.ShowDialog()) {
-                        this._operator.Index = dialog.Index;
+                    var tocDialog = new TocWindow(this, this._operator.Toc, this._operator.Index);
+                    if (true == tocDialog.ShowDialog()) {
+                        this._operator.Index = tocDialog.Index;
                         this.ShowPage();
                         this._appData.RecentFiles[0].LastIndex = this._operator.Index;
                         this._appData.Save();
@@ -93,6 +93,19 @@ namespace MyHolizontalBookViewerLight {
                         MessageBox.Show(fileName.Name);
                     } else {
                         Clipboard.SetText(fileName.Name, TextDataFormat.Text);
+                    }
+                    break;
+
+                case Key.Q:
+                    e.Handled = true;
+                    var recentFilesDialog = new RecentFiles(this);
+                    if (true == recentFilesDialog.ShowDialog()) {
+                        var recentFile = recentFilesDialog.RecentFile;
+                        if (0 < recentFile.CacheDir.Length) {
+                            this.ShowBook(recentFile.CacheDir + @"\meta.json", recentFile.HBVFilePath, recentFile.CacheDir);
+                        } else {
+                            this.ShowBook(recentFile.FilePath);
+                        }
                     }
                     break;
             }

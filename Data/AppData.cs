@@ -39,6 +39,7 @@ namespace MyHolizontalBookViewerLight.Data {
             public int LastIndex { set; get; } = 0;
             public string HBVFilePath { set; get; } = "";
             public string CacheDir { set; get; } = "";
+            public string DisplayName { set; get; } = "";
         }
         /// <summary>
         /// 最近使ったファイルのリスト。
