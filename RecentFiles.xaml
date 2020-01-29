@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyHolizontalBookViewerLight"
         mc:Ignorable="d"
-        Title="最近使ったファイル" Height="450" Width="600" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
+        Title="最近使ったファイル" Height="450" Width="600" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <Grid>
         <ListView Name="cRecentFileList" Height="Auto" ItemsSource="{Binding}" SelectionMode="Single" MouseDoubleClick="RecentFileList_MouseDoubleClick">
             <ListView.ItemTemplate>

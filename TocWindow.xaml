@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyHolizontalBookViewerLight"
         mc:Ignorable="d"
-        Title="目次" Height="450" Width="450" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
+        Title="目次" Height="450" Width="450" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
     <Grid>
         <ListView Name="cToc" Height="Auto" ItemsSource="{Binding}" SelectionMode="Single" MouseDoubleClick="TocList_MouseDoubleClick">
             <ListView.ItemTemplate>

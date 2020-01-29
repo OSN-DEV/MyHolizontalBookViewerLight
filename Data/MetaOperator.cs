@@ -1,13 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using MyLib.File;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyLib.File;
 using System.IO;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 
 namespace MyHolizontalBookViewerLight.Data {
 

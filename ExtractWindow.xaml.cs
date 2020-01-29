@@ -1,16 +1,8 @@
-﻿using MyHolizontalBookViewerLight.Data;
-using MyHolizontalBookViewerLight.Util;
-using MyLib.File;
-using MyLib.Util;
-using System;
+﻿using MyLib.File;
 using System.IO;
 using System.IO.Compression;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Navigation;
-using static MyHolizontalBookViewerLight.Data.AppData;
 
 namespace MyHolizontalBookViewerLight {
     /// <summary>

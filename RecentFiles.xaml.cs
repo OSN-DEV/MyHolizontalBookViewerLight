@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using MyHolizontalBookViewerLight.Util;
 
 namespace MyHolizontalBookViewerLight {
     /// <summary>
@@ -55,7 +56,7 @@ namespace MyHolizontalBookViewerLight {
             var list = new List<AppData.RecentFile>();
             var meta = new MetaOperator();
             foreach (var file in AppData.GetInstance().RecentFiles) {
-                meta.MetaFile = (0 < file.CacheDir.Length) ? file.CacheDir + @"\meta.json" : file.FilePath;
+                meta.MetaFile = (0 < file.CacheDir.Length) ? Constant.CasheMeta(file.CacheDir) : file.FilePath;
                 if (!meta.ParseMeta()) {
                     continue;
                 }

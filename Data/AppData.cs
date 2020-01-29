@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic; 
+﻿using MyHolizontalBookViewerLight.Util;
 using MyLib.Data;
-using MyHolizontalBookViewerLight.Util;
+using System.Collections.Generic;
 
 namespace MyHolizontalBookViewerLight.Data {
     /// <summary>

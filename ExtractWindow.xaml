@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyHolizontalBookViewerLight"
         mc:Ignorable="d"
-        Title="Unzip" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" WindowStyle="None">
+        Title="Unzip" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" WindowStyle="None" ShowInTaskbar="False">
     <StackPanel Margin="10"
             Orientation="Horizontal">
         <Grid>

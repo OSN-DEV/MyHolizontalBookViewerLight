@@ -4,7 +4,6 @@ using MyLib.File;
 using MyLib.Util;
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
@@ -102,7 +101,7 @@ namespace MyHolizontalBookViewerLight {
                     if (true == recentFilesDialog.ShowDialog()) {
                         var recentFile = recentFilesDialog.RecentFile;
                         if (0 < recentFile.CacheDir.Length) {
-                            this.ShowBook(recentFile.CacheDir + @"\meta.json", recentFile.HBVFilePath, recentFile.CacheDir);
+                            this.ShowBook(Constant.CasheMeta(recentFile.CacheDir), recentFile.HBVFilePath, recentFile.CacheDir);
                         } else {
                             this.ShowBook(recentFile.FilePath);
                         }
@@ -142,25 +141,28 @@ namespace MyHolizontalBookViewerLight {
             }
 
 
-            if (file.Name.EndsWith(@"meta.json")) {
+            if (file.Name.EndsWith(Constant.MetaJson)) {
                 e.Cancel = true;
                 this.ShowBook(e.Uri.LocalPath + Uri.UnescapeDataString(e.Uri.Fragment));
             } else  if (file.Extension == "hbv") {
                 e.Cancel = true;
                 var recentFile = this.ContainsExtractFiles(file.FilePath);
-                if (null != recentFile) {
-                    this.ShowBook(recentFile.CacheDir + @"\meta.json", recentFile.HBVFilePath, recentFile.CacheDir);
+                if (null != recentFile && System.IO.File.Exists(Constant.CasheMeta(recentFile.CacheDir))) {
+                    this.ShowBook(Constant.CasheMeta(recentFile.CacheDir), recentFile.HBVFilePath, recentFile.CacheDir);
                 } else {
+                    if (0 < recentFile.CacheDir.Length) {
+                        this._appData.RecentFiles.Remove(recentFile);
+                        this._appData.Save();
+                    }
+                    var cacheDir = DateTime.Now.ToString("yyyyMMddHHMMss");
                     var dialog = new ExtractWindow(this);
                     dialog.HBVFile = file.FilePath;
-                    dialog.DestDir = Constant.CacheDir + DateTime.Now.ToString("yyyyMMddHHMMss");
-                    var cacheDir = Constant.CacheDir + DateTime.Now.ToString("yyyyMMddHHMMss");
+                    dialog.DestDir = Constant.CacheDir + cacheDir;
                     if (true == dialog.ShowDialog()) {
-                        this.ShowBook(cacheDir + @"\meta.json", file.FilePath, cacheDir);
+                        this.ShowBook(Constant.CasheMeta(cacheDir), file.FilePath, cacheDir);
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -175,7 +177,6 @@ namespace MyHolizontalBookViewerLight {
             }
         }
         #endregion
-
 
         #region Private Method
         /// <summary>
@@ -312,7 +313,7 @@ namespace MyHolizontalBookViewerLight {
                 var target = new DirectoryOperator(dir.FullName);
                 var found = false;
                 foreach(var file  in this._appData.RecentFiles) {
-                    if (file.CacheDir == target.FilePath) {
+                    if (file.CacheDir == target.Name) {
                         found = true;
                         break;
                     }
