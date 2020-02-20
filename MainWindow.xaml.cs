@@ -150,7 +150,7 @@ namespace MyHolizontalBookViewerLight {
                 if (null != recentFile && System.IO.File.Exists(Constant.CasheMeta(recentFile.CacheDir))) {
                     this.ShowBook(Constant.CasheMeta(recentFile.CacheDir), recentFile.HBVFilePath, recentFile.CacheDir);
                 } else {
-                    if (0 < recentFile.CacheDir.Length) {
+                    if (null != recentFile &&  0 < recentFile.CacheDir.Length) {
                         this._appData.RecentFiles.Remove(recentFile);
                         this._appData.Save();
                     }
