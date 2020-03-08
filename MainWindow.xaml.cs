@@ -107,6 +107,22 @@ namespace MyHolizontalBookViewerLight {
                         }
                     }
                     break;
+
+                case Key.J:
+                    if(Common.IsModifierPressed(ModifierKeys.Control)) {
+                        e.Handled = true;
+                        var jumpPageDialog = new JumpPage(this, this._operator.Index);
+                        if (true == jumpPageDialog.ShowDialog()) {
+                            var index = jumpPageDialog.Index;
+                            if (0<=index) {
+                                this._operator.Index = jumpPageDialog.Index;
+                                this.ShowPage();
+                                this._appData.RecentFiles[0].LastIndex = this._operator.Index;
+                                this._appData.Save();
+                            }
+                        }
+                    }
+                    break;
             }
         }
 

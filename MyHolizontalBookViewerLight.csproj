@@ -75,6 +75,9 @@
     <Compile Include="ExtractWindow.xaml.cs">
       <DependentUpon>ExtractWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JumpPage.xaml.cs">
+      <DependentUpon>JumpPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RecentFiles.xaml.cs">
       <DependentUpon>RecentFiles.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,10 @@
     <Compile Include="Util\AppCommon.cs" />
     <Compile Include="Util\Constant.cs" />
     <Page Include="ExtractWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JumpPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
