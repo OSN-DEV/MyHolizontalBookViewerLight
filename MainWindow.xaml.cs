@@ -147,6 +147,7 @@ namespace MyHolizontalBookViewerLight {
         private void Viewer_Navigating(object sender, NavigatingCancelEventArgs e) {
             if (!e.Uri.IsFile) {
                 e.Cancel = true;
+                MyLib.Util.Common.RunApplication(e.Uri.ToString(), false);
                 return;
             }
 
