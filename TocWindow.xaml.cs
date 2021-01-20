@@ -13,6 +13,7 @@ namespace MyHolizontalBookViewerLight {
         internal TocWindow(Window owner, List<MetaOperator.TocModelEx> model, int index) {
             InitializeComponent();
             this.Owner = owner;
+            this.Width = this.Owner.Width * 0.8;
             this.cToc.DataContext = model;
 
             this.Loaded += (sender, e) => {
