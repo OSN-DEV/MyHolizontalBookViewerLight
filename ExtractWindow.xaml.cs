@@ -1,4 +1,5 @@
 ﻿using MyLib.File;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -33,7 +34,8 @@ namespace MyHolizontalBookViewerLight {
             Task.Run(() => {
                 try {
                     Extract(this.HBVFile, this.DestDir);
-                } catch {
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.Message);
                     this.Close(false);
                     return;
                 }

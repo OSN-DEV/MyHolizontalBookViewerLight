@@ -12,6 +12,7 @@ namespace MyHolizontalBookViewerLight {
 
         #region Public Method
         public AppData.RecentFile RecentFile { set; get; }
+        private List<AppData.RecentFile> _list;
         # endregion
 
         #region Constructor
@@ -22,12 +23,28 @@ namespace MyHolizontalBookViewerLight {
         internal RecentFiles(Window owner) {
             InitializeComponent();
             this.Owner = owner;
-            this.cRecentFileList.DataContext = this.CreateList();
+            this._list = this.CreateList();
+            this.cRecentFileList.DataContext = this._list;
 
             this.KeyDown += (sender, e) => {
                 if (e.Key == Key.Escape) {
                     e.Handled = true;
                     this.Close();
+                } else if (e.Key == Key.Delete) {
+                    e.Handled = true;
+                    var item = this.cRecentFileList.SelectedItem as AppData.RecentFile;
+                    this._list.Remove(item);
+                    this.cRecentFileList.Items.Refresh();
+
+
+                    var appData = AppData.GetInstance();
+                    foreach (var file in appData.RecentFiles) {
+                        if (file.FilePath == item.FilePath) {
+                            appData.RecentFiles.Remove(file);
+                            break;
+                        }
+                    }
+                    appData.Save();
                 }
             };
         }
@@ -55,9 +72,12 @@ namespace MyHolizontalBookViewerLight {
         private List<AppData.RecentFile> CreateList() {
             var list = new List<AppData.RecentFile>();
             var meta = new MetaOperator();
-            foreach (var file in AppData.GetInstance().RecentFiles) {
+            var appData = AppData.GetInstance();
+            var delteFiles = new List<AppData.RecentFile>();
+            foreach (var file in appData.RecentFiles) {
                 meta.MetaFile = (0 < file.CacheDir.Length) ? Constant.CasheMeta(file.CacheDir) : file.FilePath;
                 if (!meta.ParseMeta()) {
+                    delteFiles.Add(file);
                     continue;
                 }
                 list.Add(new AppData.RecentFile() {
@@ -67,6 +87,14 @@ namespace MyHolizontalBookViewerLight {
                     DisplayName = meta.Title
                 });
             }
+
+            foreach(var file in delteFiles) {
+                appData.RecentFiles.Remove(file);
+            }
+            if (0 < delteFiles.Count) {
+                appData.Save();
+            }
+            
             return list;
         }
         #endregion
