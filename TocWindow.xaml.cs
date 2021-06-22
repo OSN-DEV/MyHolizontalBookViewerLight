@@ -1,5 +1,6 @@
 ﻿using MyHolizontalBookViewerLight.Data;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -27,13 +28,17 @@ namespace MyHolizontalBookViewerLight {
                     }
                 }
                 if (!scrolled) {
-                    for(int i=model.Count -1; 0<= i; i--) {
-                        if (model[i].Index < index) {
-                            this.cToc.SelectedIndex = i;
-                            this.cToc.ScrollIntoView(this.cToc.SelectedItem);
+                    int maxPage = 0;
+                    // for(int i=model.Count -1; 0<= i; i--) {
+                    for (int i = 0; i < model.Count - 1;i++) {
+                        if (0 <= model[i].Index && model[i].Index < index) {
+                            maxPage = i;
+                        } else {
                             break;
                         }
                     }
+                    this.cToc.SelectedIndex = maxPage;
+                    this.cToc.ScrollIntoView(this.cToc.SelectedItem);
                 }
             };
 
