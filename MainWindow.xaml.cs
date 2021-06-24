@@ -123,6 +123,16 @@ namespace MyHolizontalBookViewerLight {
                         }
                     }
                     break;
+
+                case Key.Down:
+                    e.Handled = true;
+                    this.ScrollTo(true);
+                    break;
+
+                case Key.Up:
+                    e.Handled = true;
+                    this.ScrollTo(false);
+                    break;
             }
         }
 
@@ -341,7 +351,23 @@ namespace MyHolizontalBookViewerLight {
             }
         }
 
+        /// <summary>
+        /// scroll window
+        /// </summary>
+        /// <param name="ToDown"></param>
+        private void ScrollTo(bool ToDown) {
+            var document = this.cViewer.Document as MSHTML.HTMLDocument;
+            if (null == document) {
+                return;
+            }
 
+            var window = document.parentWindow;
+            if (null == window) {
+                return;
+            }
+            var offSet = (ToDown ? 1 : -1) * 20;
+            window.scrollBy(0, offSet);
+        }
         #endregion
 
     }
