@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MyHolizontalBookViewerLight {
@@ -40,6 +41,12 @@ namespace MyHolizontalBookViewerLight {
                     this.cToc.SelectedIndex = maxPage;
                     this.cToc.ScrollIntoView(this.cToc.SelectedItem);
                 }
+//                this.cToc.Loaded += new RoutedEventHandler(ListViewLoaded);
+                this.cToc.Focus();
+                var item = (ListViewItem)(this.cToc.ItemContainerGenerator.ContainerFromItem(cToc.SelectedItem));
+                item.Focus();
+
+//                this.cToc.SelectedItem
             };
 
             this.KeyDown += (sender, e) => {
