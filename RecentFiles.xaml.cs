@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using MyHolizontalBookViewerLight.Util;
+using System.Windows.Controls;
 
 namespace MyHolizontalBookViewerLight {
     /// <summary>
@@ -25,6 +26,13 @@ namespace MyHolizontalBookViewerLight {
             this.Owner = owner;
             this._list = this.CreateList();
             this.cRecentFileList.DataContext = this._list;
+
+            this.Loaded += (sender, e) => {
+                this.cRecentFileList.SelectedIndex = 0;
+                this.cRecentFileList.Focus();
+                var item = (ListViewItem)(this.cRecentFileList.ItemContainerGenerator.ContainerFromItem(cRecentFileList.SelectedItem));
+                item.Focus();
+            };
 
             this.KeyDown += (sender, e) => {
                 if (e.Key == Key.Escape) {
