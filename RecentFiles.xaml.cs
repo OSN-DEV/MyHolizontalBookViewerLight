@@ -38,6 +38,10 @@ namespace MyHolizontalBookViewerLight {
                 if (e.Key == Key.Escape) {
                     e.Handled = true;
                     this.Close();
+                } else if (e.Key == Key.Enter) {
+                    e.Handled = true;
+                    this.RecentFileList_MouseDoubleClick(this.cRecentFileList, null);
+
                 } else if (e.Key == Key.Delete) {
                     e.Handled = true;
                     var item = this.cRecentFileList.SelectedItem as AppData.RecentFile;

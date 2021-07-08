@@ -53,6 +53,9 @@ namespace MyHolizontalBookViewerLight {
                 if (e.Key == Key.Escape) {
                     e.Handled = true;
                     this.Close();
+                } else if (e.Key == Key.Enter) {
+                    e.Handled = true;
+                    this.TocList_MouseDoubleClick(this.cToc, null);
                 }
             };
         }
