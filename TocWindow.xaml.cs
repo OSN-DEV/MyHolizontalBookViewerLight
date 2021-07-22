@@ -44,7 +44,7 @@ namespace MyHolizontalBookViewerLight {
 //                this.cToc.Loaded += new RoutedEventHandler(ListViewLoaded);
                 this.cToc.Focus();
                 var item = (ListViewItem)(this.cToc.ItemContainerGenerator.ContainerFromItem(cToc.SelectedItem));
-                item.Focus();
+                item?.Focus();
 
 //                this.cToc.SelectedItem
             };
