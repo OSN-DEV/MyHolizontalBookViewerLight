@@ -32,6 +32,9 @@ namespace MyHolizontalBookViewerLight {
                     int maxPage = 0;
                     // for(int i=model.Count -1; 0<= i; i--) {
                     for (int i = 0; i < model.Count - 1;i++) {
+                        if (model[i].Index == -1) {
+                            continue;
+                        }
                         if (0 <= model[i].Index && model[i].Index < index) {
                             maxPage = i;
                         } else {
@@ -39,7 +42,7 @@ namespace MyHolizontalBookViewerLight {
                         }
                     }
                     this.cToc.SelectedIndex = maxPage;
-                    this.cToc.ScrollIntoView(this.cToc.SelectedItem);
+                    //this.cToc.ScrollIntoView(this.cToc.SelectedItem);
                 }
 //                this.cToc.Loaded += new RoutedEventHandler(ListViewLoaded);
                 this.cToc.Focus();
